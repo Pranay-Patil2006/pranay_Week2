@@ -1,7 +1,7 @@
 # pranay_Week2
 SoC workshop week 2 deliverables.
 <details>
-<summary>Part 1</summary>
+<summary>Part 1- Theory</summary>
 
 ## What is a System-on-Chip (SoC)?
 
@@ -76,7 +76,7 @@ Catching logic or interface issues early at the functional model level prevents 
 
 </details>
 <details>
-<summary>Part 2</summary>
+<summary>Part 2- Lab</summary>
 
 ## Cloning, compiling, and analysis of the output.
 
