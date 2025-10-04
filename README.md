@@ -92,6 +92,9 @@ make pre_synth_sim
 ```
 This command compiles the verilog files and simulates it and further forms the .vcd files.
 
+<img width="1107" height="351" alt="image" src="https://github.com/user-attachments/assets/9d32fae2-0ac8-4d94-a762-12df3f1feadc" />
+
+
 Open the VCD file in GTKWave:
 ```bash
 gtkwave output/pre_synth_sim/pre_synth_sim.vcd
