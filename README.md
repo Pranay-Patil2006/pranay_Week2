@@ -77,5 +77,45 @@ Catching logic or interface issues early at the functional model level prevents 
 </details>
 <details>
 <summary>Part 2</summary>
-Hi
+
+## Cloning, compiling, and analysis of the output.
+
+**Setting up the BabySoC directory**:
+```bash
+git clone https://github.com/manili/VSDBabySoC.git
+```
+cloning the VSDBabySoC directory from github
+
+```bash
+cd VSDBabySoC
+make pre_synth_sim
+```
+This command compiles the verilog files and simulates it and further forms the .vcd files.
+
+Open the VCD file in GTKWave:
+```bash
+gtkwave output/pre_synth_sim/pre_synth_sim.vcd
+```
+
+## Waveform Analysis
+<img width="1917" height="1072" alt="image" src="https://github.com/user-attachments/assets/88b17755-c883-4234-b0b3-cd340ffd979f" />
+We get 3 outputs in our .vcd file.
+1) The output produced by the core. This is a 10 bit bus, that contain the binary form of the processed data which later needs to be converted into analog output.
+2) The analog output. This is the binary output normalized to 1. This is then scaled according to the source voltage.
+3) The simulation interprets the analog signal as a binary wire, so when the analog value is less than 0.5 the output goes to zero and when it is greater, then it goes to 1.
+
+# pll
+```
+always @(posedge REF) begin
+   if (lastedge > 0.0) begin
+      refpd = $realtime - lastedge;
+      period = (refpd / 8.0);
+   end
+   lastedge = $realtime;
+end
+```
+This is the snippet from the behavioural code of the pll. From this it can be observed that the clk signal has a frequency 8 times faster than the reference signal that goes into the input of the pll. We can change the frequency of the clk by making the reference signal faster or slower.
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/95e36c8b-5d86-4acf-99fb-2e14a5f674e9" />
+
+
 </details>
