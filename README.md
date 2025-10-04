@@ -127,7 +127,6 @@ always @(posedge REF) begin
 end
 ```
 This is the snippet from the behavioural code of the pll. From this it can be observed that the clk signal has a frequency 8 times faster than the reference signal that goes into the input of the pll. We can change the frequency of the clk by making the reference signal faster or slower.
-At startup: output clock toggles at 40 MHz (25 ns period).
 As REF clock runs, the module measures its period dynamically.
 
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/95e36c8b-5d86-4acf-99fb-2e14a5f674e9" />
