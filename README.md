@@ -100,9 +100,18 @@ gtkwave output/pre_synth_sim/pre_synth_sim.vcd
 ## Waveform Analysis
 <img width="1917" height="1072" alt="image" src="https://github.com/user-attachments/assets/88b17755-c883-4234-b0b3-cd340ffd979f" />
 We get 3 outputs in our .vcd file.
-1) The output produced by the core. This is a 10 bit bus, that contain the binary form of the processed data which later needs to be converted into analog output.
-2) The analog output. This is the binary output normalized to 1. This is then scaled according to the source voltage.
-3) The simulation interprets the analog signal as a binary wire, so when the analog value is less than 0.5 the output goes to zero and when it is greater, then it goes to 1.
+
+1. Digital output from the core  
+   - A 10-bit bus representing the processed data from the RVMYTH core.  
+   - This binary data is sent to the DAC for analog conversion.  
+
+2. Analog output (normalized)  
+   - The binary output normalized to 1.  
+   - Scaled according to the source voltage (`VREFH` and `VREFL`).  
+
+3. Simulation interpretation  
+   - The waveform viewer treats the analog signal as a binary wire.  
+   - Values below 0.5 appear as logic 0; above 0.5 appear as logic 1.
 
 # pll
 ```
@@ -115,7 +124,48 @@ always @(posedge REF) begin
 end
 ```
 This is the snippet from the behavioural code of the pll. From this it can be observed that the clk signal has a frequency 8 times faster than the reference signal that goes into the input of the pll. We can change the frequency of the clk by making the reference signal faster or slower.
+At startup: output clock toggles at 40 MHz (25 ns period).
+As REF clock runs, the module measures its period dynamically.
+
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/95e36c8b-5d86-4acf-99fb-2e14a5f674e9" />
 
+# DAC
+
+<img width="1619" height="334" alt="image" src="https://github.com/user-attachments/assets/4277ebd1-9e3d-48a3-8609-524d4cbd2f6c" />
+
+* D[9:0] — a 10-bit digital input code from the processor (binary value 0–1023).
+* VREFH — high reference voltage (analog high level).
+* VREFL — low reference voltage (analog low level).
+* OUT — resulting analog voltage output.
+
+
+```
+OUT = VREFL + (D / 1023) × (VREFH – VREFL)
+```
+The output of the processor which is 10 bit, is converted into decimal and then normalized between the analog high and low, to output it to the suitable device.
+
+Below is the behavioural code of the DAC.
+```
+always @(D or EN or VREFH or VREFL) begin
+   if (EN == 1'b0) begin
+      OUT <= 0.0;
+   end
+   else if (VREFH == NaN) begin
+      OUT <= NaN;
+   end
+   else if (VREFL == NaN) begin
+      OUT <= NaN;
+   end
+   else if (EN == 1'b1) begin
+      OUT <= VREFL + ($itor(Dext) / 1023.0) * (VREFH - VREFL);
+   end
+   else begin
+      OUT <= NaN;
+   end
+end
+```
+NaN is used to show invalid state. NaN is assigned the value 0.0/0.0 in this code.
+
+The behavioural code shows that it updates the output voltage dynamically, whenever the output or the analog high or low changes. Similar to how the DAC would work.
 
 </details>
