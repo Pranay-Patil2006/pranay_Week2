@@ -170,4 +170,21 @@ NaN is used to show invalid state. NaN is assigned the value 0.0/0.0 in this cod
 
 The behavioural code shows that it updates the output voltage dynamically, whenever the output or the analog high or low changes. Similar to how the DAC would work.
 
+## The inputs, outputs and the communication between modules
+<img width="2270" height="1260" alt="image" src="https://github.com/user-attachments/assets/75a3fc2d-b9e4-409e-a0a9-68984d60a128" />
+
+* **AVSPLL**: This module controls the clock signal of the system.
+  - Input: Enable signal, Reference signal from the crystal pad oscillator.
+  - Output: Clk signal
+  - Clk signal is transferred to the processor.
+
+* **RVMYTH processor**:  This is the processor of our SoC.
+  - Input: Clk signal
+  - Output: Enable signal for the DAC and output of the processor.
+  - Connection between the pll, for the clock and DAC to interface the digital output to the real world devices.
+
+* **PLL**: Phase locked loop.
+  - Input: Reference signal from the crystal oscillator.
+  - Output: The clock signal.
+  - Connection between the pll and the processor.
 </details>
